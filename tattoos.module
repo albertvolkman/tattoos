@@ -1,0 +1,45 @@
+<?php
+
+function tattoos_block($op = 'list', $delta = 0) {
+  $block = array();
+
+  if ($op == "list") {
+    $block = array();
+    $block[0]["info"] = t('Tattoos');
+    $block[1]["info"] = t('Tattoo Cover Ups');
+  } else if ($op == 'view') {
+    // Generate our block content
+    // set up an empty string to contain the block contents
+
+    switch($delta) {
+      case "0":
+        $block_content = load_workset(9);
+        $block['subject'] = "Tattoos";
+        $block['content'] = $block_content;
+        break;
+      case "1":
+        $block_content = load_workset(65);
+        $block['subject'] = "Tattoo Cover Ups";
+        $block['content'] = $block_content;
+        break;
+    }
+  }
+
+  return $block;
+}
+
+function load_workset($nid = 9) {
+  $node = node_load($nid);
+  $array = array_merge($node->field_work_set_1, $node->field_work_set_2, $node->field_work_set_3, $node->field_work_set_4, $node->field_work_set_5, $node->field_work_set_6);
+
+  $images = array();
+  foreach ($array as $row) {
+    if (!empty($row['fid'])) {
+      $thumbnail = theme('imagecache', 'profile_work', $row['filepath']);
+      $images[]['data'] = l($thumbnail, $row['filepath'], array(html=>true));
+    }
+  }
+
+  $output = theme('item_list', $images);
+  return $output;
+}
