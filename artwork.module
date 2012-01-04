@@ -1,12 +1,11 @@
 <?php
 
-function tattoos_block($op = 'list', $delta = 0) {
+function artwork_block($op = 'list', $delta = 0) {
   $block = array();
 
   if ($op == "list") {
     $block = array();
-    $block[0]["info"] = t('Tattoos');
-    $block[1]["info"] = t('Tattoo Cover Ups');
+    $block[0]["info"] = t('Artwork Examples');
   } else if ($op == 'view') {
     // Generate our block content
     // set up an empty string to contain the block contents
@@ -14,12 +13,7 @@ function tattoos_block($op = 'list', $delta = 0) {
     switch($delta) {
       case "0":
         $block_content = load_workset();
-        $block['subject'] = "Tattoos";
-        $block['content'] = $block_content;
-        break;
-      case "1":
-        $block_content = load_workset();
-        $block['subject'] = "Tattoo Cover Ups";
+        $block['subject'] = "Artwork Examples";
         $block['content'] = $block_content;
         break;
     }
