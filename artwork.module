@@ -13,12 +13,12 @@ function tattoos_block($op = 'list', $delta = 0) {
 
     switch($delta) {
       case "0":
-        $block_content = load_workset(9);
+        $block_content = load_workset();
         $block['subject'] = "Tattoos";
         $block['content'] = $block_content;
         break;
       case "1":
-        $block_content = load_workset(65);
+        $block_content = load_workset();
         $block['subject'] = "Tattoo Cover Ups";
         $block['content'] = $block_content;
         break;
@@ -28,8 +28,8 @@ function tattoos_block($op = 'list', $delta = 0) {
   return $block;
 }
 
-function load_workset($nid = 9) {
-  $node = node_load($nid);
+function load_workset() {
+  $node = node_load(arg(1));
   $array = array_merge($node->field_work_set_1, $node->field_work_set_2, $node->field_work_set_3, $node->field_work_set_4, $node->field_work_set_5, $node->field_work_set_6);
 
   $images = array();
