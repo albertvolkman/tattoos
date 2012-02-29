@@ -15,6 +15,7 @@ function artwork_block($op = 'list', $delta = 0) {
         $block_content = load_workset();
         $block['subject'] = "Artwork Examples";
         $block['content'] = $block_content;
+        $block['cache_mode'] = BLOCK_NOT_CACHABLE;
         break;
     }
   }
@@ -24,13 +25,19 @@ function artwork_block($op = 'list', $delta = 0) {
 
 function load_workset() {
   $node = node_load(arg(1));
-  $array = array_merge($node->field_work_set_1, $node->field_work_set_2, $node->field_work_set_3, $node->field_work_set_4, $node->field_work_set_5, $node->field_work_set_6);
+  //$array = array_merge($node->field_videos, $node->field_work_set_1, $node->field_work_set_2, $node->field_work_set_3, $node->field_work_set_4, $node->field_work_set_5, $node->field_work_set_6);
+  $array = array_merge($node->field_videos, $node->field_portfolio);
 
   $images = array();
   foreach ($array as $row) {
     if (!empty($row['fid'])) {
       $thumbnail = theme('imagecache', 'profile_work', $row['filepath']);
       $images[]['data'] = l($thumbnail, $row['filepath'], array(html=>true));
+    } else if (!empty($row['embed'])) {
+      //$thumbnail = theme('imagecache_external', 'profile_work', $row['data']['thumbnail']['url']);
+      $image_url = imagecache_external_generate_path($row['data']['thumbnail']['url'], 'profile_work');
+      $thumbnail = '<img src="' . $image_url . '" alt="image description" />';
+      $images[]['data'] = l($thumbnail, $row['embed'], array(html=>true));
     }
   }
 
