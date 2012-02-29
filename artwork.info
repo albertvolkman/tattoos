@@ -1,3 +1,4 @@
 name = Artwork Block
 description = Adds a block of example artwork
 core = 6.x
+dependencies[] = imagecache_external
