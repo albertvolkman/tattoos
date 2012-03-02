@@ -5,7 +5,8 @@ function artwork_block($op = 'list', $delta = 0) {
 
   if ($op == "list") {
     $block = array();
-    $block[0]["info"] = t('Artwork Examples');
+    $block[0]['info'] = t('Artwork Examples');
+    $block[0]['cache'] = BLOCK_NO_CACHE;
   } else if ($op == 'view') {
     // Generate our block content
     // set up an empty string to contain the block contents
@@ -15,7 +16,6 @@ function artwork_block($op = 'list', $delta = 0) {
         $block_content = load_workset();
         $block['subject'] = "Artwork Examples";
         $block['content'] = $block_content;
-        $block['cache_mode'] = BLOCK_NOT_CACHABLE;
         break;
     }
   }
@@ -32,12 +32,12 @@ function load_workset() {
   foreach ($array as $row) {
     if (!empty($row['fid'])) {
       $thumbnail = theme('imagecache', 'profile_work', $row['filepath']);
-      $images[]['data'] = l($thumbnail, $row['filepath'], array(html=>true));
+      $images[]['data'] = l($thumbnail, $row['filepath'], array('html'=>true, 'attributes' => array('class' => 'image')));
     } else if (!empty($row['embed'])) {
       //$thumbnail = theme('imagecache_external', 'profile_work', $row['data']['thumbnail']['url']);
       $image_url = imagecache_external_generate_path($row['data']['thumbnail']['url'], 'profile_work');
       $thumbnail = '<img src="' . $image_url . '" alt="image description" />';
-      $images[]['data'] = l($thumbnail, $row['embed'], array(html=>true));
+      $images[]['data'] = l($thumbnail, $row['embed'], array('html'=>true, 'attributes' => array('class' => 'video')));
     }
   }
 
