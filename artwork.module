@@ -26,6 +26,7 @@ function artwork_block($op = 'list', $delta = 0) {
 function load_workset() {
   $node = node_load(arg(1));
   //$array = array_merge($node->field_videos, $node->field_work_set_1, $node->field_work_set_2, $node->field_work_set_3, $node->field_work_set_4, $node->field_work_set_5, $node->field_work_set_6);
+  /*
   $array = array_merge($node->field_videos, $node->field_portfolio);
 
   $images = array();
@@ -42,5 +43,27 @@ function load_workset() {
   }
 
   $output = theme('item_list', $images);
+  */
+
+  $images = array();
+  foreach ($node->field_portfolio as $row) {
+    if (!empty($row['fid'])) {
+      $thumbnail = theme('imagecache', 'profile_work', $row['filepath']);
+      $images[]['data'] = l($thumbnail, $row['filepath'], array('html'=>true, 'attributes' => array('class' => 'image')));
+    }
+  }
+
+  $videos = array();
+  foreach ($node->field_videos as $row) {
+    if (!empty($row['embed'])) {
+      $image_url = imagecache_external_generate_path($row['data']['thumbnail']['url'], 'profile_work');
+      $thumbnail = '<img src="' . $image_url . '" alt="image description" />';
+//      $videos[]['data'] = l($thumbnail, $row['embed'], array('html'=>true, 'attributes' => array('class' => 'video')));
+      $videos[] = sprintf('<div class="videoframe"><iframe allowfullscreen="" frameborder="0" height="240" src="%s" width="320"></iframe></div>', $row['embed']);
+    }
+  }
+
+  $output = sprintf('<div id="videos">%s</div>', implode($videos));
+  $output .= theme('item_list', $images);
   return $output;
 }
